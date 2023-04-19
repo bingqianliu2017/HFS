@@ -1,0 +1,462 @@
+:root {
+    height: 100dvh; /* workarounded chrome109-mobile's problem with sticky-bottom bar moving when scrolling */
+
+    --bg: #fff;
+    --text: #555;
+    --ghost-contrast: #8882;
+    --faint-contrast: #8884;
+    --mild-contrast: #8886;
+    --good-contrast: #000a;
+    --button-bg: #68a;
+    --button-text: #eaeaea;
+    --focus-color: #468;
+    --separator: " – ";
+    .highlightedText { color: #0006; text-shadow: 0 0 3px #0006; }
+    .theme-dark {
+        --bg: #000;
+        --text: #999;
+        --good-contrast: #fffa;
+        --button-bg: #345;
+        --button-text: #999;
+        color-scheme: dark;
+        .highlightedText { color: #fff; text-shadow: 0 0 3px #fff; }
+        a { color:#8ac; }
+        .dialog-closer { background: #633 }
+        .dialog-icon { color: #ccc;
+            .icon { color: #aaa; margin-left: -1px; font-size:95%; }
+        }
+        .dialog-backdrop { background: #333b; }
+        .error-msg { color: #b88; background-color: #623; }
+        button.toggled { color: #eee; }
+    }
+}
+body {
+    background-color: var(--bg);
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+body, button, select, input { font-size: 12pt; }
+#root {
+    max-width: 50em;
+    margin: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+body, input {
+    color: var(--text);
+}
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+input:not([type=checkbox]), select {
+    padding: 0.3em 0.4em;
+    border-radius: 0.5em;
+    background: var(--bg);
+    border-color: var(--mild-contrast);
+    color: var(--good-contrast);
+    max-width: 100%; box-sizing: border-box; // avoid scrolling
+    width: 100%;
+}
+input[type=checkbox] {
+    transform: scale(1.7);
+    accent-color: var(--button-bg);
+}
+label input[type=checkbox] {
+    margin-right: .8em;
+}
+select { text-align: center; } /* it is surely cooler on the options dialog */
+
+.hidden { display: none !important }
+
+.icon {
+    font-size: 1.2em;
+}
+.emoji-icon {
+    display: inline-block;
+    width: 1.4em;
+    text-align: center;
+}
+.file-icon {
+    @extend .emoji-icon;
+    height: 1em;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: text-bottom;
+}
+
+.icon.mirror:before { transform: scaleX(-1); }
+a {
+    text-decoration: none;
+    color: #57a;
+}
+button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 0.5em 1em;
+    border: transparent;
+    text-decoration: none;
+    border-radius: 0.3em;
+    vertical-align: middle;
+    cursor: pointer;
+    &:hover { outline: 1px solid var(--mild-contrast); }
+}
+button.toggled {
+    color: #fff;
+    text-shadow: 0 0 3px #fff;
+}
+button, .breadcrumb { /* consistent focus color */
+    &:focus-visible {
+        outline: 3px solid var(--focus-color);
+    }
+}
+a>button { width:100% } /* link buttons, fill parent space */
+input, select, ul a {
+    &:focus-visible {
+        border-radius: .3em;
+        border-color: transparent;
+        outline: 2px solid var(--focus-color);
+    }
+}
+
+.icon-button {
+    font-size: 0.7em;
+    padding: 0.2em 0.4em;
+    margin-left: 0.4em;
+    vertical-align: bottom;
+}
+
+.error-msg {
+    background-color: #faa;
+    color: #833;
+    padding: .5em 1em;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    background-color: var(--bg);
+    padding: .2em;
+    z-index: 1; /* necessary to not be covered by checkboxes */
+}
+
+.before-sliding {
+    width: 0 !important;
+    flex: 0 !important;
+    margin: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    transition: flex .5s;
+}
+.show-sliding {
+    transition: flex .5s;
+    overflow: clip;
+    flex: 1;
+    white-space: nowrap;
+}
+
+.ani-working { animation:1s blink infinite }
+
+@keyframes blink {
+    0% {opacity: 1}
+    50% {opacity: 0.2}
+}
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+@keyframes fade-in {
+    0% {opacity: 0}
+    100% {opacity: 1}
+}
+
+.spinner, .icon.spinner:before {
+    animation: 1.5s spin infinite linear;
+    display: inline-flex; justify-content: center; align-items: center; width: min-content;
+}
+.icon.emoji.spinner { display: inline-block; }
+
+.breadcrumb {
+    padding: 0.1em 0.6em 0.2em;
+    line-height: 1.8em;
+    border-radius: 0.7em;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+
+    border-top: 1px solid #666;
+    margin-right: -0.1em;
+}
+.breadcrumb:nth-child(-n+3) .icon {
+    padding: 0 0.2em;
+}
+#folder-stats, #filter-bar>span {
+    font-size: 90%;
+}
+#folder-stats {
+    margin: 0.5em 0 0 0.5em;
+    float: right;
+    & .icon {
+        margin-right: .3em;
+    }
+}
+#filter {
+    flex: 1;
+    box-sizing: border-box;
+}
+#filter-bar {
+    display: flex;
+    align-items: center;
+    gap: .8em;
+    margin: 0.2em 0 0;
+    padding: 2px 0 1px 11px;
+    height: 1.8em; /* necessary to animate displaying */
+    & input[type=checkbox] { margin-top: .5em; }
+    & span:empty { display:none } /* avoid flex-gap */
+}
+
+ul.dir {
+    flex: 1;
+    padding: 0;
+    margin: 0;
+    clear: both;
+    &>p { text-align: center; }
+    & li {
+        display: block;
+        list-style-type: none;
+        padding: 0.3em 0.3em 0.4em;
+        border-bottom: 1px solid var(--faint-contrast);
+        &:nth-of-type(odd) { background-color: var(--ghost-contrast); }
+
+        & input[type=checkbox] {
+            margin: 0 .8em;
+        }
+        & a {
+            &:last-of-type {
+                word-break: break-word;
+                padding-right: 0.3em;
+            }
+            & .icon {
+                margin-right: .3em;
+            }
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        & .entry-panel {
+            float: right;
+            margin-top: 0.3em;
+            display: flex;
+            align-items: center;
+            & .file-menu-button {
+                @extend .icon-button;
+                margin: -3px 0 -3px 0.4em;
+            }
+            & .entry-props {
+                font-size: 90%;
+                margin-left: 4px;
+                font-variant-numeric: tabular-nums; /* trick to get stuff aligned */
+
+                & .entry-size-unit {
+                    margin-left: .3em;
+                }
+            }
+        }
+
+        &>div:last-of-type { clear:both }
+        &.page-separator {
+            margin-top: 1em;
+            position: relative;
+            &::before {
+                content: attr(label);
+                position: absolute;
+                top: -1.8em;
+                font-size: smaller;
+                margin-left: calc(50% - 1em);
+                opacity: .9;
+            }
+        }
+    }
+}
+
+#menu-bar {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    &>* {
+        flex: 1;
+        margin: 0.1em;
+    }
+    & button { /* no need for horizontal padding as we are using flex to grow */
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+#searched {
+    margin: .2em;
+}
+#user-panel {
+    display:flex;
+    flex-direction: column;
+    gap: 1em;
+    & a>button {
+        width: 100%;
+    }
+}
+
+button label {
+    cursor: inherit;
+    margin-left: 0.5em;
+}
+
+.dialog-backdrop.working {
+    font-size: 5em;
+    animation: 1s fade-in;
+}
+.dialog-content {
+    padding: .2em; /* give space for focus outline */
+}
+.dialog-alert .dialog-content {
+    text-align: center;
+    & p { text-align: left; display: inline-block; }
+}
+
+.dialog {
+    min-width: 11em;
+    --color: var(--button-bg);
+}
+
+#paging {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    gap: .1em;
+    background-color: var(--bg);
+    padding: 0 0.2em 0.2em;
+    &>button { z-index: 1; }
+    & button { box-shadow: 0 0 .3em .3em #0003; }
+    & #paging-middle {
+        padding: 0 0.5em;
+        margin: 0 -0.3em;
+        display: flex;
+        gap: .5em;
+        flex: 1;
+        overflow-x: auto;
+    }
+    & #paging-middle>button {
+        flex: 1;
+        padding-top: 0; padding-bottom: 0; /* reduce vertically in case a horizontal scrolling bar is needed */
+    }
+    & button {
+        background: var(--button-bg);
+        text-align: center;
+        white-space: nowrap;
+        padding: .5em; /* fit more buttons on screen */
+    }
+}
+
+.upload-progress::before { content: var(--separator); }
+.entry-size::after { content: var(--separator) }
+
+.upload-progress {
+    min-width: 4em;
+    display: inline-block;
+    margin-left: 0.5em;
+}
+.upload-list {
+    & td:nth-child(1) { width: 0;  }
+    & td:nth-child(2) { text-align: right; width: 0; white-space: nowrap; padding-left: 0.5em; }
+    & td:nth-child(3) { padding: .2em .5em; word-break: break-word; }
+}
+
+.dialog-login {
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2em;
+    }
+    label {
+        display: block;
+        margin-bottom: .5em;
+        margin-left: .1em;
+    }
+}
+
+.miss-perm  { margin: .3em }
+
+.popup-menu-button {
+    font-size: .8em; padding: .2em .3em; position: absolute; opacity: .8;
+    &:hover { opacity: 1 }
+}
+
+.file-dialog .dialog-content { min-width: calc(100% - 1em); } /* effective and nicer on short names  */
+.file-dialog .dialog { min-width: 13em; } /* more room for title */
+.file-dialog-properties {
+    word-break: break-word;
+    line-height: 1.5em;
+    & dt { font-weight: bold; }
+    & dd { margin-left: 1.5em; }
+}
+.file-menu {
+    margin-top: 1em;
+
+    display: flex;
+    flex-direction: column;
+    & a {
+        padding: .5em 0;
+        &:first-child {
+            padding-top: 1em;
+            border-top: 1px solid var(--faint-contrast);
+        }
+        & .icon { margin-right: 0.5em; }
+        &:hover { @extend .highlightedText }
+    }
+}
+
+@media (min-width: 42em) {
+    body {
+        /* Works on Firefox */
+        & {
+            scrollbar-width: thin;
+            scrollbar-color: var(--button-bg) var(--ghost-contrast);
+        }
+
+        /* Works on Chrome, Edge, and Safari */
+        &::-webkit-scrollbar {
+            width: 12px;
+        }
+        &::-webkit-scrollbar-track {
+            background: var(--ghost-contrast);
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--button-bg);
+            border-radius: 20px;
+            border: 1px solid var(--ghost-contrast)
+        }
+    }
+}
+@media (max-width: 42em) {
+    :root { --ghost-contrast: #8883; } /* phones have different curve */
+    body, button, select { font-size: 14pt; }
+    #menu-bar, #filter-bar {
+        & button label { display: none } /* icons only */
+    }
+    #filter-bar {
+        margin-top: 0.4em;
+    }
+    #filter-bar button { /* make it same size of top bar */
+        width: 17.6vw;
+        height: 2.3em;
+    }
+    .breadcrumb {
+        word-break: break-all; /* solves with very long names without spaces. 'break-word' is nicer but doesn't handle worst
+              cases like /gear/mininova/x/LOOPMASTERS%204Gig%20Pack/LOOPMASTERS_2015/BASS_HOUSE_AND_GARAGE_2_DEMOS/SOUNDS_AND_FX/
+              */
+    }
+    .breadcrumb .icon {
+        font-size:24px;
+    }
+}

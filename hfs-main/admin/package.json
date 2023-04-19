@@ -1,0 +1,68 @@
+{
+  "name": "@hfs/admin",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test-dep": "npm audit --production"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@hfs/mui-grid-form": "*",
+    "@hfs/shared": "*",
+    "@emotion/styled": "^11.10.0",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/lab": "^5.0.0-alpha.94",
+    "@mui/material": "^5.10.0",
+    "@mui/x-data-grid": "^5.15.1",
+    "@gregoranders/csv": "^0.0.12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.2.1",
+    "react-simple-code-editor": "^0.13.1",
+    "react-window": "^1.8.6",
+    "tssrp6a": "^3.0.0",
+    "valtio": "^1.2.9",
+    "immer": "^9.0.15",
+    "usehooks-ts": "^2.9.1",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.21",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-window": "^1.8.5",
+    "@types/react-virtualized-auto-sizer": "^1.0.1",
+    "vite": "^4.0.4",
+    "vite-plugin-babel-import": "github:rejetto/vite-plugin-babel-import"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.ts"
+        ],
+        "rules": {
+          "no-mixed-operators": "off"
+        }
+      }
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

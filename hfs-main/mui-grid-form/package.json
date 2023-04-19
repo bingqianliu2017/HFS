@@ -1,0 +1,15 @@
+{
+  "name": "@hfs/mui-grid-form",
+  "main": "index.ts",
+  "dependencies": {
+    "@mui/icons-material": "*",
+    "@mui/lab": "*",
+    "@mui/material": "*",
+    "lodash": "*"
+  },
+  "devDependencies": {
+    "@types/lodash": "*",
+    "react": "*",
+    "react-dom": "*"
+  }
+}
